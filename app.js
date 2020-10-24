@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
 var nodeGit = require("nodegit");
+const pulumiAutoApi = require("@pulumi/pulumi/x/automation");
+const upath = require("upath");
 
 const app = express();
 
@@ -57,8 +59,10 @@ app.route("/services")
         });
     })
     .post((req, res) => {
-        // TODO: grab the github url and create an s3 bucket with the information
-        // maybe make it a pulumi program??
+        // TODO: local support
+        // TODO: github url support 
+        // TODO: save to s3 bucket for versioning
+        // TODO: make s3 bucket pulumi program for service?
         const service = new Service({
             githubUrl: req.body.githubUrl,
             name: req.body.name, 
@@ -94,7 +98,7 @@ app.route("/services/:serviceName")
     })
     .delete((req, res) => {
         // TODO: Make sure there are no running instances of this service 
-        // otherwise, block the delete
+        // otherwise, block the delete.
         Service.deleteOne({name: req.params.serviceName}, (err) => {
             if (!err) {
                 res.send("Successfully deleted article.")
@@ -122,17 +126,47 @@ app.route("/services/:serviceName/instances")
             }
         });
     })
-    .post((req, res) => {
-        // TODO: THIS IS WHERE THE MAGIC HAPPENS
-        // pull the s3 bucket locally and run pulumi up with the inputs
-        // create a new project and stack if a project doesn't already exist
-        // set inputs to config file
+    .post(async (req, res) => {
+        // TODO: Hard code reference to a pulumi program
+        // TODO: Make this work with local references
+        // TODO: Using github directly
+        // TODO: S3
+        // TODO: figure out how to handle inputs
 
-        // create object that includes all body that aren't name
+        // Create stack using a local program
+        const args = {
+            stackName: req.body.name,
+            workDir: upath.joinSafe(__dirname, "pulumi-s3"),
+        };
+
+        // create (or select if one already exists) a stack that uses our local program
+        console.info("initializing stack...");
+        const stack = await pulumiAutoApi.LocalWorkspace.createOrSelectStack(args);
+        console.info("successfully initialized stack");
+        
+        // I believe this will actually create the config file for the stack so don't need
+        // to worry about saving it
+        console.info("setting up config");
+        await stack.setConfig("aws:region", { value: "us-east-1" });
+        console.info("config set");
+        
+        // is this step necessary because of the config step?
+        // possible to setup config as part of create stack?
+        console.info("refreshing stack...");
+        await stack.refresh({ onOutput: console.info });
+        console.info("refresh complete");
+        
+        console.info("updating stack...");
+        const upRes = await stack.up({ onOutput: console.info });
+        console.info(`update summary object: ${JSON.stringify(upRes.summary)}`);
+        console.log(`update summary: \n${JSON.stringify(upRes.summary.resourceChanges, null, 4)}`);
+        console.log(`outputs: ${JSON.stringify(upRes.outputs)}`);
+        // console.log(`website url: ${upRes.outputs.url.value}`);
+
         const serviceInstance = new ServiceInstance({
             name: req.body.name,
-            inputs: {something: "put inputs here"}, // maybe collect all inputs from other params?
-            outputs: {something: "put outputs of running pulumi here..."}
+            inputs: {something: "put inputs here"}, // maybe collect all inputs from other body args
+            outputs: upRes.outputs
         });
         Service.findOne({ name: req.params.serviceName }, (err, service) => {
             service.instances.push(serviceInstance);
@@ -145,7 +179,7 @@ app.route("/services/:serviceName/instances")
             });
         });
     })
-    // // TODO: probably just delete this.
+    // // TODO: probably just delete this
     // .delete((req, res) => {
     //     Service.deleteMany((err) => {
     //         if (!err) {
@@ -209,7 +243,25 @@ app.route("/services/:serviceName/instances/:instanceName")
             }
         });
     })
-    .delete((req, res) => {
+    .delete(async (req, res) => {
+        const args = {
+            stackName: req.params.instanceName,
+            workDir: upath.joinSafe(__dirname, "pulumi-s3"),
+        };
+
+        // select stack that uses our local program
+        console.info("initializing stack...");
+        const stack = await pulumiAutoApi.LocalWorkspace.selectStack(args);
+        console.info("successfully initialized stack");
+
+        console.info("destroying stack...");
+        const destroyResult = await stack.destroy({onOutput: console.info});
+        console.info("stack destroy complete");
+        console.log(`destroy result: ${JSON.stringify(destroyResult)}`);
+
+        console.info("removing stack...");
+        await stack.workspace.removeStack(args.stackName);
+        console.info("stack removal complete");
         Service.findOneAndUpdate({ name: req.params.serviceName }, { $pull: { "instances": { name: req.params.instanceName } } }, (err) => {
             if (!err) {
                 res.send("Successfully deleted instance of " + req.params.serviceName + ".");
@@ -226,3 +278,9 @@ app.route("/services/:serviceName/instances/:instanceName")
 app.listen(3000, function() {
   console.log("Server started on port 3000");
 });
+
+
+// IDEAS
+// Could actually create npm packages that represent a program... then pin to a specific 
+// version from NPM... don't think that works because I would have to load dependencies 
+// at runtime.. which I don't think is possible?

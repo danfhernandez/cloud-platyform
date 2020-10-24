@@ -9,10 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pulumi/pulumi": "^2.12.1",
     "body-parser": "^1.19.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "mongoose": "^5.10.9",
-    "nodegit": "^0.27.0"
+    "nodegit": "^0.27.0",
+    "upath": "^2.0.0"
   }
 }
