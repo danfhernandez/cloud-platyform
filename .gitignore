@@ -1,1 +1,4 @@
-/node_modules
+/bin/
+/node_modules/
+/tmp/
+*.zip
