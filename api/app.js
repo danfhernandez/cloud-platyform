@@ -12,6 +12,7 @@ const fs = require("fs");
 const extract = require('extract-zip')
 const { v4: uuidv4 } = require("uuid");
 const { exec } = require("child_process");
+const cors = require("cors");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(express.static("public"));
+app.use(cors());
 
 mongoose.connect("mongodb://localhost:27017/platyDB", { 
     useNewUrlParser: true,
