@@ -18,9 +18,8 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cors());
 
@@ -136,6 +135,12 @@ app.route("/services/:serviceName/instances")
         // TODO: S3
         // TODO: figure out how to handle inputs / config
         // TODO: setup nodemon to ignore the tmp directory
+        console.log("Name from request: "+req.body.name)
+        if (req.body.name === "undefined" || req.body.name === undefined) {
+            console.log("undefined");
+            res.send("Please include a name for the new instance.");
+            return;
+        } 
         Service.findOne({ name: req.params.serviceName }, async (err, service) => {
             const zipFile = 'master.zip';
             const href = `${service.githubUrl}/archive/${zipFile}`;

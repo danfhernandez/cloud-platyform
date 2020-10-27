@@ -1,52 +1,88 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ServiceInstance from "./ServiceInstance";
+import axios from "axios";
 
 function Service(props) {
     const [serviceInstances, setServiceInstances] = useState([{}]);
-    const { serviceName } = props;
+    const [newInstanceName, setNewInstanceName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const { serviceName, updateServices } = props;
 
-    useEffect(() => {
+    function updateServiceData() {
         fetch("http://localhost:3000/services/" + serviceName)
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log("Service Instances result: ")
+                    console.log("Service result: ")
                     console.log(result);
-                    if (result.instances.length > 0) {
-                        setServiceInstances(result.instances);
-                    }
+                    setServiceInstances(result.instances ?? []);
                 }
             );
+    }
+    useEffect(() => {
+        updateServiceData();
     }, []);
 
-    function onClickHandler() {
+    function newInstanceHandler() {
+        setLoading(true);
+        axios.post("http://localhost:3000/services/" + serviceName + "/instances", { "name": newInstanceName })
+            .then(function (response) {
+                console.log('Success:', response);
+                updateServiceData();
+            })
+            .catch(function (error) {
+                console.log(error);
+                setLoading(false);
+            });
+    }
 
+    function handleChangeNewInstanceName(event) {
+        setNewInstanceName(event.target.value);
+    }
+
+    function handleDeleteService() {
+        setDeleting(true);
+        axios.delete("http://localhost:3000/services/" + serviceName)
+            .then(function (response) {
+                console.log('Success:', response);
+                updateServices()
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
     return (
         <div>
-            <li> {serviceName}
+            <li> {serviceName} {deleting ? "(deleting...)" : null}
                 <ol>
                     {serviceInstances.map((serviceInstance, i) => {
                         return (
                             <ServiceInstance
                                 key={i}
-                                name={serviceInstance.name}
+                                serviceName={serviceName}
+                                instanceName={serviceInstance.name}
                                 outputs={JSON.stringify(serviceInstance.outputs)}
+                                updateServiceData={updateServiceData}
                             />
                         )
                     })}
                 </ol>
                 <ul>
                     <li>
-                        <input type="text" placeholder="Name">
+                        {loading ? "creating new instance of service..." : (
+                            <div>
+                                <input value={newInstanceName} onChange={handleChangeNewInstanceName} type="text" placeholder="Name" />
+                                <button onClick={newInstanceHandler}>Provision Service Instance</button>
+                            </div>
 
-                        </input>
-                        <button onClick={onClickHandler}>Provision Service Instance</button>
+                        )}
+
                     </li>
                 </ul>
             </li>
             <li>
-                <button>Delete Service</button>
+                <button onClick={handleDeleteService}>Delete Service</button>
             </li>
         </div>
 

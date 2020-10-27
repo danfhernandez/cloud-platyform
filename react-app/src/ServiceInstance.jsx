@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 function ServiceInstance(props) {
-    const { name, outputs } = props;
+    const [deleting, setDeleting] = useState(false);
+    const { instanceName, outputs, updateServiceData, serviceName} = props;
+
+    function deleteInstanceHandler() {
+        setDeleting(true);
+        axios.delete("http://localhost:3000/services/" + serviceName + "/instances/" + instanceName)
+          .then(function (response) {
+            console.log('Success:', response);
+            updateServiceData();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    } 
     return (
         <li>
-            {name} 
+            {instanceName} {deleting ? "(deleting...)" : null}
             <ul>
                 <li>outputs:</li>
                 <ul>
                     <li>{outputs}</li>
                 </ul>
-                <li><button>Delete Service Instance</button></li>
+                {deleting ? null : <li><button onClick={deleteInstanceHandler}>Delete Service Instance</button></li>}
+                
             </ul>
         </li>
     );
