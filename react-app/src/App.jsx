@@ -1,10 +1,13 @@
 import React from "react";
-import Services from "./Services";
+import Content from "./Content";
+import TopNav from "./TopNav";
+import Container from "react-bootstrap/Container";
 
 function App() {
   return (
     <div>
-      <Services />
+      <TopNav />
+      <Content />
     </div>
   );
 }

@@ -5,9 +5,185 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.bg-dark-purple {
+  background-color: #6c5ce7 !important;
+}
+
+.nav-link:hover {
+  border-bottom: 6px solid #a29bfe;
+  color: white !important;
+}
+
+
+.nav-link.active {
+  border-bottom: 6px solid #a29bfe;
+  color: white !important;
+}
+
+
+.nav-link {
+  color: #a29bfe !important;
+}
+
+
+
+.nav-bar {
+  height: 50px !important;
+}
+
+#wrapper {
+  overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+min-height: 100vh;
+margin-left: -15rem;
+-webkit-transition: margin .25s ease-out;
+-moz-transition: margin .25s ease-out;
+-o-transition: margin .25s ease-out;
+transition: margin .25s ease-out;
+background-color: white;
+}
+
+#sidebar-wrapper .sidebar-heading {
+padding: 0.875rem 1.25rem;
+font-size: 1.4rem;
+background-color: white;
+
+}
+
+.sidebar-heading {
+  font-weight: bold;
+}
+
+#sidebar-wrapper .list-group {
+width: 15rem;
+
+}
+
+#page-content-wrapper {
+min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+margin-left: 0;
+}
+
+@media (min-width: 768px) {
+#sidebar-wrapper {
+  margin-left: 0;
+  color: #a29bfe;
+  
+}
+
+#page-content-wrapper {
+  min-width: 0;
+  width: 100%;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: -15rem;
+}
+}
+
+.color-light-purp {
+  color: #a29bfe;
+}
+.color-dark-purp {
+  color: #6c5ce7 !important;
+}
+
+.btn-purp {
+  color: white;
+  background-color: #6c5ce7;
+  font-weight: bold;
+}
+
+.btn-purp:hover {
+  color: #6c5ce7;
+  background-color: white;
+  border-color: #6c5ce7;
+}
+
+.btn-l-purp {
+  color: white;
+  background-color: #a29bfe;
+  font-weight: bold;
+}
+
+.btn-l-purp:hover {
+  color: #a29bfe;
+  background-color: white;
+  border-color: #a29bfe;
+}
+
+.btn-outline-l-purp {
+  color: #a29bfe;
+  background-color: white;
+  border-color: #a29bfe;
+  font-weight: bold;
+}
+
+.btn-outline-l-purp:hover {
+  color:white;
+  background-color:  #a29bfe;
+}
+
+.btn-outline-purp {
+  color: #6c5ce7;
+  background-color: white;
+  border-color: #6c5ce7;
+  font-weight: bold;
+}
+
+.btn-outline-purp:hover {
+  color:white;
+  background-color:  #6c5ce7;
+}
+
+
+
+.btn-green {
+  color: white;
+  background-color: #00cec9;
+  font-weight: bold;
+}
+.btn-green:hover {
+  color: #00cec9;
+  background-color: white;
+  border-color: #00cec9;
+}
+
+.btn-outline-green {
+  color: #00cec9;
+  background-color: white;
+  font-weight: bold;
+  border-color: #00cec9;
+}
+.btn-outline-green:hover {
+  color: white;
+  background-color: #00cec9;
+}
+
+.btn-blue {
+  color: white;
+  background-color: #74b9ff;
+  font-weight: bold;
+}
+.btn-blue:hover {
+  color: #74b9ff;
+  background-color: white;
+  border-color: #74b9ff;
+}
+
+.button-example{
+  float: right;
 }

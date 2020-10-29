@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import ServiceInstance from "./ServiceInstance";
 import axios from "axios";
 
@@ -10,29 +10,36 @@ function Service(props) {
     const { serviceName, updateServices } = props;
 
     function updateServiceData() {
-        fetch("http://localhost:3000/services/" + serviceName)
-            .then(res => res.json())
-            .then(
-                (result) => {
+        axios.get("http://localhost:3000/services/" + serviceName)
+            .then(response => {
                     console.log("Service result: ")
-                    console.log(result);
-                    setServiceInstances(result.instances ?? []);
+                    console.log(response.data);
+                    console.log("Setting loading false in updateServiceData");
+                    setLoading(false);
+                    setServiceInstances(response.data.instances ?? []);
                 }
-            );
+            ).catch(err => {
+                console.log("Setting loading false in updateServiceData catch");
+                console.log(err);
+                setLoading(false);
+            })
     }
     useEffect(() => {
         updateServiceData();
     }, []);
 
     function newInstanceHandler() {
+        console.log("Setting loading true in new instance handler");
         setLoading(true);
         axios.post("http://localhost:3000/services/" + serviceName + "/instances", { "name": newInstanceName })
-            .then(function (response) {
+            .then(response => {
                 console.log('Success:', response);
+                console.log("Setting loading false in newInstanceHandler");
+                setLoading(false);
                 updateServiceData();
             })
-            .catch(function (error) {
-                console.log(error);
+            .catch(err => {
+                console.log(err);
                 setLoading(false);
             });
     }
@@ -44,7 +51,7 @@ function Service(props) {
     function handleDeleteService() {
         setDeleting(true);
         axios.delete("http://localhost:3000/services/" + serviceName)
-            .then(function (response) {
+            .then(response => {
                 console.log('Success:', response);
                 updateServices()
             })
