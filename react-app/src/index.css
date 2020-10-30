@@ -149,6 +149,17 @@ margin-left: 0;
   background-color:  #6c5ce7;
 }
 
+.btn-outline-red {
+  color: #ff7675;
+  background-color: white;
+  border-color: #ff7675;
+  font-weight: bold;
+}
+
+.btn-outline-red:hover {
+  color:white;
+  background-color:  #ff7675;
+}
 
 
 .btn-green {
@@ -186,4 +197,8 @@ margin-left: 0;
 
 .button-example{
   float: right;
+}
+
+button:focus {
+  outline:0;
 }

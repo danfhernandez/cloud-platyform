@@ -19,7 +19,7 @@ function TopNav() {
                 <Navbar.Collapse className="mr-auto mb-0 pb-0" id="basic-navbar-nav">
                     <Nav className="mr-auto mb-0 pb-0" style={{height: "60px"}}>
                         <Nav.Link className="py-auto mt-2 px-3 font-weight-bold"  href="#applications"><i class="far fa-list-alt mr-1"></i> Applications</Nav.Link>
-                        <Nav.Link className="py-auto mt-2 px-3 font-weight-bold" href="#services"><i class="fas fa-bolt mr-1" /> Services</Nav.Link>
+                        <Nav.Link className="py-auto mt-2 px-3 font-weight-bold active" href="#services"><i class="fas fa-bolt mr-1" /> Services</Nav.Link>
                         <Nav.Link className="py-auto mt-2 px-3 font-weight-bold" href="#accounts"><i class="fas fa-cloud mr-1"></i> Accounts</Nav.Link>
                         <Nav.Link className="py-auto mt-2 px-3 font-weight-bold" href="#controls"><i class="fas fa-lock mr-1"></i> Controls</Nav.Link>
                         <Nav.Link className="py-auto mt-2 px-3 font-weight-bold" href="#settings"><i class="fas fa-cogs mr-1"></i> Settings</Nav.Link>
