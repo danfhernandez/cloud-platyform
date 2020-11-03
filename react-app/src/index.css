@@ -202,3 +202,21 @@ margin-left: 0;
 button:focus {
   outline:0;
 }
+
+.active-service {
+  background-color: #a29bfe; 
+  color: white !important;
+  border-color: #a29bfe;
+}
+
+.active-service:hover {
+  background-color: #a29bfe; 
+  color: white !important;
+  border-color: #a29bfe;
+}
+
+.active-service:focus {
+  background-color: #a29bfe; 
+  color: white !important;
+  border-color: #a29bfe;
+}
