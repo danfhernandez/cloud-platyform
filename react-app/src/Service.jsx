@@ -68,7 +68,7 @@ function Service(props) {
     return (
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h2 class="my-4 mx-4 text-muted"> {displayName} Service
+                <h2 class="my-4 mx-4 text-muted"> {displayName}
                         <a class="btn btn-outline-l-purp ml-3 mr-2 btn-sm" href={githubUrl} target="_blank">View Docs</a>
                     {deleting ? <Button disabled onClick={handleDeleteService} size="sm" variant="outline-red">Deleting...</Button> : <Button onClick={handleDeleteService} size="sm" variant="outline-red">Delete</Button>}
                     <Button onClick={handleShow} className="float-right mt-2" variant="outline-green" size="sm">New Instance</Button>
