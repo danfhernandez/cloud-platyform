@@ -26,6 +26,10 @@ function Services() {
             (result) => {
                 console.log(result);
                 setServices(result);
+                if (result.find(s => s.name === currentServiceName) === undefined && services.length > 0) {
+                    console.log("Setting service name to the first in the list since there was a delete likely...");
+                    setCurrentServiceName(services[0].name);
+                }
                 handleClose();
             }
         );

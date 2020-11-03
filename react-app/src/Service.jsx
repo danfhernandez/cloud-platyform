@@ -62,7 +62,8 @@ function Service(props) {
         axios.delete("http://localhost:3000/services/" + serviceName)
             .then(response => {
                 console.log('Success:', response);
-                updateServices()
+                setDeleting(false);
+                updateServices();
             })
             .catch(function (error) {
                 console.log(error);
