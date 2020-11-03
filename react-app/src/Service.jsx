@@ -4,10 +4,11 @@ import axios from "axios";
 import { Card, Button, Table, Form, Modal } from "react-bootstrap"
 function Service(props) {
     const [serviceInstances, setServiceInstances] = useState([{}]);
+    const [service, setService] = useState({});
     const [newInstanceName, setNewInstanceName] = useState("");
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const { serviceName, updateServices, githubUrl, displayName } = props;
+    const { serviceName, updateServices } = props;
 
     //modal
     const [show, setShow] = useState(false);
@@ -22,6 +23,7 @@ function Service(props) {
                 console.log("Setting loading false in updateServiceData");
                 setLoading(false);
                 setServiceInstances(response.data.instances ?? []);
+                setService(response.data);
             }
             ).catch(err => {
                 console.log("Setting loading false in updateServiceData catch");
@@ -30,6 +32,7 @@ function Service(props) {
             })
     }
     useEffect(() => {
+        console.log("In use effect with serviceName: " + serviceName );
         updateServiceData();
     }, []);
 
@@ -68,8 +71,8 @@ function Service(props) {
     return (
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h2 class="my-4 mx-4 text-muted"> {displayName}
-                        <a class="btn btn-outline-l-purp ml-3 mr-2 btn-sm" href={githubUrl} target="_blank">View Docs</a>
+                <h2 class="my-4 mx-4 text-muted"> {service.displayName}
+                        <a class="btn btn-outline-l-purp ml-3 mr-2 btn-sm" href={service.githubUrl} target="_blank">View Docs</a>
                     {deleting ? (
                         <Button disabled onClick={handleDeleteService} size="sm" variant="outline-red">Deleting...</Button>) : (
                         serviceInstances.length === 0 ? (

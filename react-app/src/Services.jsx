@@ -7,7 +7,7 @@ import axios from "axios";
 function Services() {
     const [services, setServices] = useState([]);
     const [githubUrl, setGithubUrl] = useState("");
-    const [currentService, setCurrentService] = useState({});
+    const [currentServiceName, setCurrentServiceName] = useState("");
     const [displayName, setName] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -41,6 +41,7 @@ function Services() {
                 console.log('Success:', response);
                 updateServices();
                 setGithubUrl("");
+                setCurrentServiceName(name);
               })
               .catch(function (error) {
                 console.log(error);
@@ -58,8 +59,7 @@ function Services() {
     function updateCurrentService(event) {
         let s = services.find(s => s.name === event.target.value);
         console.log("service found: " + JSON.stringify(s));
-        updateServices();
-        setCurrentService(s);
+        setCurrentServiceName(s.name);
     }
     return (
         
@@ -102,13 +102,8 @@ function Services() {
                         </div>
                     </div>
                     ) : (
-                            currentService.name === undefined ? (
-                                <Service updateServices={updateServices} displayName={services[0].displayName} serviceName={services[0].name} githubUrl={services[0].githubUrl}/>
-                            ) : (
-                                <Service updateServices={updateServices} displayName={currentService.displayName} serviceName={currentService.name} githubUrl={currentService.githubUrl}/>
-                            )
+                        currentServiceName === "" ? <Service key={services[0].name} updateServices={updateServices} serviceName={services[0].name}/> : <Service key={currentServiceName} updateServices={updateServices} serviceName={currentServiceName}/>
                     )}
-                
             </div>
         </div>
 
