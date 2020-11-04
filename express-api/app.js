@@ -36,7 +36,8 @@ mongoose.connect("mongodb://localhost:27017/platyDB", {
 const serviceInstancesSchema = {
     name: String,
     inputs: Object,
-    outputs: Object
+    outputs: Object,
+    displayName: String
 }
 
 const ServiceInstance = mongoose.model("ServiceInstance", serviceInstancesSchema);
@@ -201,7 +202,8 @@ app.route("/services/:serviceName/instances")
             const serviceInstance = new ServiceInstance({
                 name: req.body.name,
                 inputs: {something: "put inputs here"}, // maybe collect all inputs from other body args
-                outputs: upRes.outputs
+                outputs: upRes.outputs,
+                displayName: req.body.displayName
             });
         
             service.instances.push(serviceInstance);

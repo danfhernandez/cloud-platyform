@@ -6,6 +6,7 @@ function Service(props) {
     const [serviceInstances, setServiceInstances] = useState([{}]);
     const [service, setService] = useState({});
     const [newInstanceName, setNewInstanceName] = useState("");
+    const [newInstanceDisplayName, setNewInstanceDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const { serviceName, updateServices } = props;
@@ -39,7 +40,7 @@ function Service(props) {
     function newInstanceHandler() {
         console.log("Setting loading true in new instance handler");
         setLoading(true);
-        axios.post("http://localhost:3000/services/" + serviceName + "/instances", { "name": newInstanceName })
+        axios.post("http://localhost:3000/services/" + serviceName + "/instances", { "name": newInstanceName, "displayName": newInstanceDisplayName })
             .then(response => {
                 console.log('Success:', response);
                 console.log("Setting loading false in newInstanceHandler");
@@ -55,6 +56,9 @@ function Service(props) {
 
     function handleChangeNewInstanceName(event) {
         setNewInstanceName(event.target.value);
+    }
+    function handleChangeNewInstanceDisplayName(event) {
+        setNewInstanceDisplayName(event.target.value);
     }
 
     function handleDeleteService() {
@@ -86,11 +90,8 @@ function Service(props) {
                             <Modal.Title>Create {serviceName} Instance</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            {loading ? (
-                                <Form.Control disabled className="mb-2" value={newInstanceName} type="text" onChange={handleChangeNewInstanceName} placeholder="Instance Name" />
-                            ) : (
-                                <Form.Control className="mb-2" value={newInstanceName} type="text" onChange={handleChangeNewInstanceName} placeholder="Instance Name" />
-                            )}
+                            <Form.Control disabled={loading} className="mb-2" value={newInstanceDisplayName} type="text" onChange={handleChangeNewInstanceDisplayName} placeholder="Display Name" />
+                            <Form.Control disabled={loading} className="mb-2" value={newInstanceName} type="text" onChange={handleChangeNewInstanceName} placeholder="Instance Name (Must be unique)" />
                         </Modal.Body>
                         <Modal.Footer>
                             {loading ? (
@@ -112,6 +113,7 @@ function Service(props) {
                             <Table responsive className="mb-0">
                                 <thead>
                                     <tr class='text-muted'>
+                                        <th class="text-left pl-4">Display Name</th>
                                         <th class="text-left pl-4">Name</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Owner</th>
@@ -124,6 +126,7 @@ function Service(props) {
                                             <ServiceInstance
                                                 key={i}
                                                 serviceName={serviceName}
+                                                displayName={serviceInstance.displayName}
                                                 instanceName={serviceInstance.name}
                                                 outputs={JSON.stringify(serviceInstance.outputs)}
                                                 updateServiceData={updateServiceData}

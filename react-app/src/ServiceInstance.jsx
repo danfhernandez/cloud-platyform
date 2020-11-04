@@ -4,13 +4,14 @@ import Button from "react-bootstrap/Button";
 
 function ServiceInstance(props) {
     const [deleting, setDeleting] = useState(false);
-    const { instanceName, outputs, updateServiceData, serviceName } = props;
+    const { instanceName, outputs, updateServiceData, serviceName, displayName} = props;
 
     function deleteInstanceHandler() {
         setDeleting(true);
         axios.delete("http://localhost:3000/services/" + serviceName + "/instances/" + instanceName)
             .then(function (response) {
                 console.log('Success:', response);
+                setDeleting(false);
                 updateServiceData();
             })
             .catch(function (error) {
@@ -19,6 +20,7 @@ function ServiceInstance(props) {
     }
     return (
         <tr class='text-muted '>
+            <td class="text-left pl-4">{displayName}</td>
             <td class="text-left pl-4">{instanceName}</td>
             <td class="text-center">{deleting ? "Deleting..." : "Deployed"}</td>
             <td class="text-center">Dan Hernandez</td>
