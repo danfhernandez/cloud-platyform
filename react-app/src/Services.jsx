@@ -78,12 +78,12 @@ function Services() {
                     <div className="sidebar-heading  text-center"><i className="fas fa-bolt mr-1" /></div>
                     <div className="list-group list-group-flush ml-2">
                         {services.map((service, i) => {
-                            if (service.name === currentServiceName) {
-                                return <button key={i} onClick={updateCurrentService} value={service.name} className="list-group-item list-group-item-action color-dark-purp font-weight-bold active-service">{service.displayName}</button>
-                            } else {
-                                return <button key={i} onClick={updateCurrentService} value={service.name} className="list-group-item list-group-item-action color-dark-purp font-weight-bold">{service.displayName}</button>
-                            }
-                            
+                            return <button key={i} 
+                                onClick={updateCurrentService} 
+                                value={service.name} 
+                                className={"list-group-item list-group-item-action color-dark-purp font-weight-bold " + (service.name === currentServiceName  || (currentServiceName === "" && i === 0) ? "active-service" : "")}>
+                                {service.displayName}
+                            </button>
                         })}
                         <a href="#" className="py-4 list-group-item list-group-item-action color-dark-purp text-center">
                         <Modal show={show} onHide={handleClose} centered>
