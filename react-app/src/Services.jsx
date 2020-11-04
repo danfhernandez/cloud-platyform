@@ -6,9 +6,10 @@ import axios from "axios";
 
 function Services() {
     const [services, setServices] = useState([]);
+    const [newServiceName, setNewServiceName] = useState("");
     const [githubUrl, setGithubUrl] = useState("");
     const [currentServiceName, setCurrentServiceName] = useState("");
-    const [displayName, setName] = useState("");
+    const [displayName, setDisplayName] = useState("");
     const [loading, setLoading] = useState(false);
 
     const [show, setShow] = useState(false);
@@ -39,7 +40,7 @@ function Services() {
     }, []);
     function handleCreateService() {
         // TODO: verify that the url is in the right format.. 
-        const name = githubUrl.split("/").pop();
+        const name = newServiceName === "" ? githubUrl.split("/").pop() : newServiceName;
         axios.post("http://localhost:3000/services", {name: name, githubUrl: githubUrl, displayName: displayName})
             .then(function (response) {
                 console.log('Success:', response);
@@ -52,12 +53,16 @@ function Services() {
               });
     }
 
-    function serviceNameChanged(event) {
-        setName(event.target.value);
+    function displayNameChanged(event) {
+        setDisplayName(event.target.value);
     }
 
     function githubRepoChanged(event) {
         setGithubUrl(event.target.value);
+    }
+    
+    function newServiceNameChanged(event) {
+        setNewServiceName(event.target.value);
     }
 
     function updateCurrentService(event) {
@@ -86,7 +91,8 @@ function Services() {
                             <Modal.Title>Create Service</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                                <Form.Control className="mb-2" value={displayName} type="text" onChange={serviceNameChanged} placeholder="Display Name" />
+                                <Form.Control className="mb-2" value={displayName} type="text" onChange={displayNameChanged} placeholder="Display Name" />
+                                <Form.Control className="mb-2" value={newServiceName} type="text" onChange={newServiceNameChanged} placeholder="Name (Must be unique)" />
                                 <Form.Control className="mb-2" value={githubUrl} type="text" onChange={githubRepoChanged} placeholder="Github URL" />
                         </Modal.Body>
                         <Modal.Footer>

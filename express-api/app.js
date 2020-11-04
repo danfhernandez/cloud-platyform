@@ -145,11 +145,13 @@ app.route("/services/:serviceName/instances")
             const zipFile = 'master.zip';
             const href = `${service.githubUrl}/archive/${zipFile}`;
             const guid = uuidv4();
-            const outputDir = upath.joinSafe(__dirname, "tmp", `${service.name}-master-${guid}`);
+            // Might need to get the post fix here... 
+            const repoName = service.githubUrl.split("/").pop();
+            const outputDir = upath.joinSafe(__dirname, "tmp", `${repoName}-master-${guid}`);
 
             const args = {
                 stackName: req.body.name,
-                workDir: outputDir + "/" + `${service.name}-master`,
+                workDir: outputDir + "/" + `${repoName}-master`,
             };
 
             console.info("retrieving program from github...");
@@ -276,16 +278,17 @@ app.route("/services/:serviceName/instances/:instanceName")
     //     });
     // })
     .delete(async (req, res) => {
-        const guid = uuidv4();
-        const outputDir = upath.joinSafe(__dirname, "tmp", `${req.params.serviceName}-master-${guid}`);
+        console.info("retrieving program from github...");
         const args = {
             stackName: req.params.instanceName,
-            workDir: outputDir + "/" + `${req.params.serviceName}-master`,
+            workDir: "",
         };
-
-        console.info("retrieving program from github...");
         await new Promise((resolve) => {
             Service.findOne({ name: req.params.serviceName }, async (err, service) => {
+                const guid = uuidv4();
+                const repoName = service.githubUrl.split("/").pop();
+                const outputDir = upath.joinSafe(__dirname, "tmp", `${repoName}-master-${guid}`);
+                args.workDir = outputDir + "/" + `${repoName}-master`;
                 const zipFile = 'master.zip';
                 const href = `${service.githubUrl}/archive/${zipFile}`;
                 request(href)
