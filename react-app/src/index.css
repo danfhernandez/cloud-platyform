@@ -220,3 +220,7 @@ button:focus {
   color: white !important;
   border-color: #a29bfe;
 }
+
+.btn.focus, .btn:focus {
+  box-shadow: 0 0 0 0 !important;
+}

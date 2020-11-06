@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ServiceInstance from "./ServiceInstance";
 import axios from "axios";
-import { Card, Button, Table, Form, Modal } from "react-bootstrap"
+import { Card, Button, Table, Form, Modal, Accordion} from "react-bootstrap"
 function Service(props) {
     const [serviceInstances, setServiceInstances] = useState([{}]);
     const [service, setService] = useState({});
@@ -128,7 +128,7 @@ function Service(props) {
                                                 serviceName={serviceName}
                                                 displayName={serviceInstance.displayName}
                                                 instanceName={serviceInstance.name}
-                                                outputs={JSON.stringify(serviceInstance.outputs)}
+                                                outputs={serviceInstance.outputs}
                                                 updateServiceData={updateServiceData}
                                             />
                                         )
